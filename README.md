@@ -1,4 +1,4 @@
-# ⚡ FW-MECHBOY | Zabbix Auto-Installer ⚡
+# ⚡ FW | Zabbix Auto-Installer ⚡
 
 > **Instalador universal y automatizado para Zabbix Server.** > Despliegue profesional en segundos para SysAdmins.
 
