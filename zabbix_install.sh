@@ -4,7 +4,7 @@
 # Author:Mech Boy
 # Version: 1.0.0
 # Description: Automated, foolproof Zabbix deployment
-# Support: Debian, Ubuntu, Oracle Linux, RHEL, CentOS, Arch Linux
+# Support: Debian, Ubuntu, Oracle Linux, RHEL, CentOS, Arch Linux, SUSE, Amazon, Alma, Rocky, RPi
 # ==============================================================================
 
 # ====== COLORES Y VARIABLES GLOBALES ======
@@ -108,12 +108,17 @@ OS_NAME="$PRETTY_NAME"
 VER_ID="$VERSION_ID"
 VER_MAJOR=$(echo "$VERSION_ID" | cut -d. -f1)
 
+# Parche de compatibilidad para Amazon Linux
+[[ "$ID" == "amzn" && "$VER_MAJOR" == "2" ]] && VER_MAJOR="7"
+[[ "$ID" == "amzn" && "$VER_MAJOR" == "2023" ]] && VER_MAJOR="9"
+
 detect_pkg() {
     if command -v apt >/dev/null; then
         PKG="apt"
         [[ "$ID" == "ubuntu" ]] && REPO_OS="ubuntu" || REPO_OS="debian"
     elif command -v dnf >/dev/null; then PKG="dnf"
     elif command -v yum >/dev/null; then PKG="yum"
+    elif command -v zypper >/dev/null; then PKG="zypper"
     elif command -v pacman >/dev/null; then PKG="pacman"
     else fail "Gestor de paquetes no soportado."; fi
 }
@@ -140,6 +145,13 @@ select_options() {
                 LATEST_DEB=$(curl -s "$DIR_URL" | grep -Eo "zabbix-release_${v}-1\+${REPO_OS}[0-9.]+_all\.deb" | sort -V | tail -n 1)
                 if [ -n "$LATEST_DEB" ]; then
                     echo "$v|$LATEST_DEB" >> "$VALID_FILE"
+                    VERSIONS_FOUND+=("$v")
+                fi
+            elif [ "$PKG" == "zypper" ]; then
+                DIR_URL="https://repo.zabbix.com/zabbix/${v}/sles/${VER_MAJOR}/x86_64/"
+                LATEST_RPM=$(curl -s "$DIR_URL" | grep -Eo "zabbix-release-${v}-1\.sles${VER_MAJOR}\.noarch\.rpm" | head -n 1)
+                if [ -n "$LATEST_RPM" ]; then
+                    echo "$v|$LATEST_RPM" >> "$VALID_FILE"
                     VERSIONS_FOUND+=("$v")
                 fi
             else
@@ -207,6 +219,11 @@ task_repos() {
         wget -q "$URL" -O zbx.deb
         dpkg -i -E --force-confnew zbx.deb
         apt update -y
+    elif [ "$PKG" == "zypper" ]; then
+        EXACT_FILE=$(grep "^${Z_VER}|" "$VALID_FILE" | cut -d'|' -f2)
+        URL_RPM="https://repo.zabbix.com/zabbix/${Z_VER}/sles/${VER_MAJOR}/x86_64/${EXACT_FILE}"
+        zypper --non-interactive install "$URL_RPM"
+        zypper --non-interactive --gpg-auto-import-keys refresh
     elif [ "$PKG" == "dnf" ] || [ "$PKG" == "yum" ]; then
         rpm --import https://repo.zabbix.com/zabbix/RPM-GPG-KEY-ZABBIX-08EFA7DD
         EXACT_FILE=$(grep "^${Z_VER}|" "$VALID_FILE" | cut -d'|' -f2)
@@ -220,6 +237,8 @@ task_packages() {
     if [ "$PKG" == "apt" ]; then
         export DEBIAN_FRONTEND=noninteractive
         apt install -y zabbix-server-$DB_TYPE zabbix-frontend-php zabbix-$WEB_TYPE-conf zabbix-sql-scripts zabbix-agent mariadb-server
+    elif [ "$PKG" == "zypper" ]; then
+        zypper --non-interactive install zabbix-server-$DB_TYPE zabbix-web-$DB_TYPE zabbix-$WEB_TYPE-conf zabbix-sql-scripts zabbix-agent mariadb
     elif [ "$PKG" == "pacman" ]; then
         pacman -Sy --noconfirm zabbix-server zabbix-frontend-php zabbix-agent mariadb apache php-apache
     else
@@ -269,7 +288,8 @@ task_services() {
     rm -f /etc/zabbix/web/zabbix.conf.php /usr/share/zabbix/conf/zabbix.conf.php
 
     WEB_SRV="apache2"; [[ "$WEB_TYPE" == "nginx" ]] && WEB_SRV="nginx"
-    [[ "$PKG" != "apt" && "$WEB_TYPE" == "apache" ]] && WEB_SRV="httpd"
+    # Ajuste para RHEL/CentOS que usan httpd (Debian y SUSE usan apache2)
+    [[ "$PKG" != "apt" && "$PKG" != "zypper" && "$WEB_TYPE" == "apache" ]] && WEB_SRV="httpd"
 
     systemctl restart zabbix-server zabbix-agent $WEB_SRV
     systemctl enable zabbix-server zabbix-agent $WEB_SRV
