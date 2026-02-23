@@ -17,6 +17,6 @@
 Copiá y pegá este bloque en tu terminal para iniciar el asistente de FW-MECHBOY:
 
 ```bash
-wget https://raw.githubusercontent.com/micklo5188/zabbix-auto-installer/main/install.sh
-chmod +x install.sh
-sudo ./install.sh
+wget https://raw.githubusercontent.com/micklo5188/zabbix-auto-installer/main/zabbix_install.sh
+chmod +x zabbix_install.sh
+sudo ./zabbix_install.sh
