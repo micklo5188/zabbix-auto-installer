@@ -74,7 +74,7 @@ Según modo (nativo o Docker), soporta:
 ## 🛠️ Instalación rápida
 
 ```bash
-git clone [https://github.com/FW-MechBoy/zabbix-auto-installer.git](https://github.com/FW-MechBoy/zabbix-auto-installer.git)
+git clone https://github.com/FW-MechBoy/zabbix-auto-installer.git
 cd zabbix-auto-installer
 chmod +x zabbix_install.sh
 sudo ./zabbix_install.sh
@@ -114,12 +114,13 @@ tail -n 200 /tmp/zbx_install.log
 ## 🧹 Limpieza total / Uninstall
 ⚠️ Esto puede borrar datos/DB/volúmenes. Usar con cuidado en producción.
 
+```bash
 cd zabbix-auto-installer
 
 chmod +x zbx_clean.sh
 
 sudo ./zbx_clean.sh
-
+```
 ---
 
 ## 🧯 Troubleshooting
@@ -128,14 +129,16 @@ sudo ./zbx_clean.sh
 Suele ocurrir cuando la UI levanta antes del import del schema o el server todavía inicializa.
 
 Logs útiles (Docker):
+```bash
 docker ps
 docker logs --tail=200 <container_db>
 docker logs --tail=200 <container_server>
 docker logs --tail=200 <container_web>
-
+```
 Health DB:
+```bash
 docker inspect --format '{{json .State.Health}}' <container_db>
-
+```
 ---
 
 ## 🔐 Seguridad
