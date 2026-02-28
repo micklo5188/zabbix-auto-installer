@@ -116,7 +116,9 @@ tail -n 200 /tmp/zbx_install.log
 ## 🧹 Limpieza total / Uninstall
 ⚠️ Esto puede borrar datos/DB/volúmenes. Usar con cuidado en producción.
 cd zabbix-auto-installer
+
 chmod +x zbx_clean.sh
+
 sudo ./zbx_clean.sh
 
 ---
