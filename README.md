@@ -83,7 +83,7 @@ sudo ./zabbix_install.sh
 
 ---
 
-🧰 Modos de despliegue
+## 🧰 Modos de despliegue
 
 El instalador ofrece:
 
@@ -97,7 +97,7 @@ El instalador ofrece:
 
 ---
 
-🌐 Puertos
+## 🌐 Puertos
 
 Por defecto:
 Web UI: 80/tcp (o dinámico en Docker si el 80 está ocupado)
@@ -106,14 +106,14 @@ Zabbix Agent: 10050/tcp
 
 ---
 
-🧾 Logs
+## 🧾 Logs
 Log principal: /tmp/zbx_install.log
 Ver últimas líneas:
 tail -n 200 /tmp/zbx_install.log
 
 ---
 
-🧹 Limpieza total / Uninstall
+## 🧹 Limpieza total / Uninstall
 ⚠️ Esto puede borrar datos/DB/volúmenes. Usar con cuidado en producción.
 cd zabbix-auto-installer
 chmod +x zbx_clean.sh
@@ -121,12 +121,10 @@ sudo ./zbx_clean.sh
 
 ---
 
-🧯 Troubleshooting
+## 🧯 Troubleshooting
 “Database error / Unable to select configuration”
 
 Suele ocurrir cuando la UI levanta antes del import del schema o el server todavía inicializa.
-
----
 
 Logs útiles (Docker):
 docker ps
@@ -139,7 +137,7 @@ docker inspect --format '{{json .State.Health}}' <container_db>
 
 ---
 
-🔐 Seguridad
+## 🔐 Seguridad
 No subas credenciales reales al repo.
 Si exponés la UI a internet: TLS + reverse proxy + allowlists.
 Cambiá credenciales por defecto en entornos productivos.
