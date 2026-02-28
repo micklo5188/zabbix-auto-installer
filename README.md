@@ -129,16 +129,16 @@ sudo ./zbx_clean.sh
 Suele ocurrir cuando la UI levanta antes del import del schema o el server todavía inicializa.
 
 Logs útiles (Docker):
-```bash
+
 docker ps
 docker logs --tail=200 <container_db>
 docker logs --tail=200 <container_server>
 docker logs --tail=200 <container_web>
-```
+
 Health DB:
-```bash
+
 docker inspect --format '{{json .State.Health}}' <container_db>
-```
+
 ---
 
 ## 🔐 Seguridad
