@@ -148,6 +148,6 @@ Cambiá credenciales por defecto en entornos productivos.
 
 <div align="center">
 
-Hecho con ⚙️💀 por FW / Mech Boy
+⚡FW-Mech Boy⚡
 
 </div> ```
