@@ -76,9 +76,11 @@ Según modo (nativo o Docker), soporta:
 ### Opción recomendada (copy/paste)
 
 git clone https://github.com/micklo5188/zabbix-auto-installer.git
+
 cd zabbix-auto-installer
 
 chmod +x zabbix_install.sh
+
 sudo ./zabbix_install.sh
 
 ---
