@@ -73,14 +73,12 @@ Según modo (nativo o Docker), soporta:
 
 ## 🛠️ Instalación rápida
 
-git clone https://github.com/FW-MechBoy/zabbix-auto-installer.git
-
+```bash
+git clone [https://github.com/FW-MechBoy/zabbix-auto-installer.git](https://github.com/FW-MechBoy/zabbix-auto-installer.git)
 cd zabbix-auto-installer
-
 chmod +x zabbix_install.sh
-
 sudo ./zabbix_install.sh
-
+```
 ---
 
 ## 🧰 Modos de despliegue
