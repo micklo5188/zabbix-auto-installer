@@ -18,8 +18,18 @@ Copiá y pegá este bloque en tu terminal para iniciar el asistente de Zabbix
 
 git clone https://github.com/micklo5188/zabbix-auto-installer.git
 
-cd zabbix-auto-installer
+cd zabbix-auto-installer/
 
-chmod +x zabbix_install.sh
+sudo chmod +x zabbix_install.sh
 
-sudo ./zabbix_install.sh
+sudo ./zabbix_install.sh 
+
+************************************************************************************************************************************************************************************************************************
+
+en caso de necesitar una limpieza total:
+
+cd zabbix-auto-installer/
+ 
+sudo chmod +x zbx_clean.sh
+
+sudo ./zbx_clean-sh
